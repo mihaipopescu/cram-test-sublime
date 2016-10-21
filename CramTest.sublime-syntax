@@ -1,0 +1,44 @@
+%YAML 1.2
+---
+name: Cram Test
+file_extensions:
+  - t
+scope: source.cram_test
+contexts:
+  main:
+    - match: '^[^ ]'
+      scope: punctuation.definition.comment.cram_test
+      push: line_comment
+
+    - match: '^  [$>]'
+      scope: punctuation.definition.string.begin.cram_test
+      push: command
+
+  double_quoted_string:
+    - meta_scope: string.quoted.double.cram_test
+    - match: '\\.'
+      scope: constant.character.escape.cram_test
+    - match: '"'
+      scope: punctuation.definition.string.end.cram_test
+      pop: true
+
+  line_comment:
+    - meta_scope: comment.line.cram_test
+    - match: $
+      pop: true
+
+  command:
+    - meta_scope: support.function.cram_test
+    - match: '$'
+      scope: punctuation.definition.string.end.cram_test
+      pop: true
+
+    - match: '"'
+      scope: punctuation.definition.string.begin.cram_test
+      push: double_quoted_string
+
+    - match: \b[0-9]+\b
+      scope: constant.numeric.cram_test
+
+    - match: '[><|]'
+      scope: keyword.operator.cram_test
